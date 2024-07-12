@@ -33,15 +33,12 @@ export default function App() {
     alert_default_value
   );
 
-  const oneYearFromNow = new Date();
-  oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1); //incrementing the year + 1
-
-  const formatedDateString = oneYearFromNow.toLocaleDateString("pt-br", {
+  const defaultFormatedDateString =  new Date().toLocaleDateString("pt-br", {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
-
+  
   const fetchUserData = async () => {
     try {
       const {
@@ -69,13 +66,22 @@ export default function App() {
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
+    const oneYearFromNow = new Date();
+    oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1); //incrementing the year + 1
+
+    const oneYearFromNowformatedDateString = oneYearFromNow.toLocaleDateString("pt-br", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+
     try {
       await api.put(
         "/user/edit",
         {
           name,
           image,
-          validUntil: formatedDateString,
+          validUntil: oneYearFromNowformatedDateString,
         },
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -208,7 +214,7 @@ export default function App() {
           <Box sx={{ textAlign: "center", mt: 5 }}>
             <Typography variant="h6">Válido até:</Typography>
             <Typography variant="h4">
-              {userData ? userData.validUntil : formatedDateString}
+              {userData ? userData.validUntil : defaultFormatedDateString}
             </Typography>
           </Box>
           <Button
